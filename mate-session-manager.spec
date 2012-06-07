@@ -1,7 +1,7 @@
 Summary:	The mate desktop programs for the MATE GUI desktop environment
 Name:		mate-session-manager
 Version:	1.2.0
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Graphical desktop/GNOME
 URL:		http://mate-desktop.org
@@ -14,26 +14,17 @@ BuildRequires:	mateconf-sanity-check
 BuildRequires:	mate-conf
 BuildRequires:	xmlto
 BuildRequires:	pkgconfig(dbus-glib-1)
-#BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(gtk+-2.0)
-#BuildRequires:	pkgconfig(ice)
-#BuildRequires:	pkgconfig(json-glib-1.0)
 BuildRequires:	pkgconfig(mateconf-2.0)
 BuildRequires:	pkgconfig(sm)
 BuildRequires:	pkgconfig(upower-glib)
-#BuildRequires:	pkgconfig(xau)
-#BuildRequires:	pkgconfig(xcomposite)
-#BuildRequires:	pkgconfig(xext)
-#BuildRequires:	pkgconfig(xrender)
-#BuildRequires:	pkgconfig(xtst)
 BuildRequires:	x11-xtrans-devel
-#BuildRequires:	tcp_wrappers-devel
 
 Requires:	desktop-common-data
 Requires:	mateconf-sanity-check
 Requires:	mate-conf
-Requires:	mate-user-docs
+#Requires:	mate-user-docs
 Requires:	mate-settings-daemon
 Requires:	%{name}-bin >= %{version}-%{release}
 
