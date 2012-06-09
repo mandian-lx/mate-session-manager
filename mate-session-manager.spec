@@ -1,7 +1,7 @@
 Summary:	The mate desktop programs for the MATE GUI desktop environment
 Name:		mate-session-manager
 Version:	1.2.0
-Release:	2
+Release:	3
 License:	GPLv2+
 Group:		Graphical desktop/GNOME
 URL:		http://mate-desktop.org
@@ -59,6 +59,17 @@ NOCONFIGURE=yes ./autogen.sh
 %makeinstall_std
 rm -f %{buildroot}%{_datadir}/doc/mate-session/dbus/mate-session.html
 
+# wmsession session file
+mkdir -p %{buildroot}%{_sysconfdir}/X11/wmsession.d
+cat << EOF > %{buildroot}%{_sysconfdir}/X11/wmsession.d/05MATE
+NAME=MATE
+ICON=mate
+DESC=MATE Environment
+EXEC=%{_bindir}/mate-session
+SCRIPT:
+exec %{_bindir}/mate-session
+EOF
+
 %find_lang mate-session
 
 %post
@@ -77,6 +88,7 @@ rm -f %{buildroot}%{_datadir}/doc/mate-session/dbus/mate-session.html
 %{_mandir}/man1/mate-session-properties.*
 %{_mandir}/man1/mate-session-save.1.xz
 %{_mandir}/man1/mate-wm.1.xz
+%config(noreplace) %{_sysconfdir}/X11/wmsession.d/*
 
 %files bin
 %{_sysconfdir}/mateconf/schemas/mate-session.schemas
