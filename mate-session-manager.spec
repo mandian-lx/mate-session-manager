@@ -1,11 +1,11 @@
 Summary:	The mate desktop programs for the MATE GUI desktop environment
 Name:		mate-session-manager
-Version:	1.2.0
-Release:	3
+Version:	1.4.0
+Release:	1
 License:	GPLv2+
 Group:		Graphical desktop/GNOME
 URL:		http://mate-desktop.org
-Source0:	http://pub.mate-desktop.org/releases/1.2/%{name}-%{version}.tar.xz
+Source0:	http://pub.mate-desktop.org/releases/1.4/%{name}-%{version}.tar.xz
 
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
@@ -26,7 +26,7 @@ Requires:	mateconf-sanity-check
 Requires:	mate-conf
 #Requires:	mate-user-docs
 Requires:	mate-settings-daemon
-Requires:	%{name}-bin >= %{version}-%{release}
+Requires:	%{name}-bin >= %{EVRD}
 
 %description
 MATE (GNU Network Object Model Environment) is a user-friendly
@@ -70,7 +70,7 @@ SCRIPT:
 exec %{_bindir}/mate-session
 EOF
 
-%find_lang mate-session
+%find_lang %{name}
 
 %post
 %{make_session}
@@ -78,7 +78,7 @@ EOF
 %postun
 %{make_session}
 
-%files -f mate-session.lang
+%files -f %{name}.lang
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_bindir}/mate-session-properties
 %{_bindir}/mate-session-save
@@ -96,4 +96,3 @@ EOF
 %{_datadir}/mate-session
 %{_iconsdir}/hicolor/*/apps/*
 %{_mandir}/man1/mate-session.*
-
