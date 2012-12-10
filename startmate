@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ -x ~/.materc ]
+then
+    exec ~/.materc
+else
+    exec /etc/materc
+fi

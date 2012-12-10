@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ -z "$XDG_CONFIG_DIRS" ]; then
+    export XDG_CONFIG_DIRS="/etc/xdg/mate:/etc/xdg"
+else
+    export XDG_CONFIG_DIRS="/etc/xdg/mate:$XDG_CONFIG_DIRS"
+fi
+
+if [ ! -r $HOME/.mateconf ]; then
+    mateconftool-2 --load /etc/mateconf/schemas/panel-default-setup.entries
+fi
+
+exec /usr/bin/mate-session

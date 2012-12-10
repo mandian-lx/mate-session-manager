@@ -1,11 +1,13 @@
 Summary:	The mate desktop programs for the MATE GUI desktop environment
 Name:		mate-session-manager
 Version:	1.4.0
-Release:	1
+Release:	3
 License:	GPLv2+
 Group:		Graphical desktop/GNOME
 URL:		http://mate-desktop.org
-Source0:	http://pub.mate-desktop.org/releases/1.4/%{name}-%{version}.tar.xz
+Source0:	http://pub.mate-desktop.org/releases/%{lua: print (string.match(rpm.expand("%{version}"),"%d+.%d+"))}/%{name}-%{version}.tar.xz
+Source1:	startmate
+Source2:	materc
 
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
@@ -65,10 +67,13 @@ cat << EOF > %{buildroot}%{_sysconfdir}/X11/wmsession.d/05MATE
 NAME=MATE
 ICON=mate
 DESC=MATE Environment
-EXEC=%{_bindir}/mate-session
+EXEC=%{_bindir}/startmate
 SCRIPT:
-exec %{_bindir}/mate-session
+exec %{_bindir}/startmate
 EOF
+
+install -D -m 755 %{SOURCE1} %{buildroot}%{_bindir}/startmate
+install -D -m 755 %{SOURCE2} %{buildroot}%{_sysconfdir}/materc
 
 %find_lang %{name}
 
@@ -88,11 +93,29 @@ EOF
 %{_mandir}/man1/mate-session-properties.*
 %{_mandir}/man1/mate-session-save.1.xz
 %{_mandir}/man1/mate-wm.1.xz
-%config(noreplace) %{_sysconfdir}/X11/wmsession.d/*
+%config %{_sysconfdir}/X11/wmsession.d/*
 
 %files bin
 %{_sysconfdir}/mateconf/schemas/mate-session.schemas
+%{_sysconfdir}/materc
 %{_bindir}/mate-session
+%{_bindir}/startmate
 %{_datadir}/mate-session
 %{_iconsdir}/hicolor/*/apps/*
 %{_mandir}/man1/mate-session.*
+
+
+
+%changelog
+* Sat Jun 09 2012 Dmitry Mikhirev <dmikhirev@mandriva.org> 1.2.0-3
++ Revision: 804161
+- add wmsession file
+
+* Thu Jun 07 2012 Matthew Dawkins <mattydaw@mandriva.org> 1.2.0-2
++ Revision: 803180
+- rebuild dropping non-existent mate-user-docs
+
+* Sat Jun 02 2012 Matthew Dawkins <mattydaw@mandriva.org> 1.2.0-1
++ Revision: 802055
+- imported package mate-session-manager
+
