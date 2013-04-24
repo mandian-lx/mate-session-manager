@@ -78,8 +78,6 @@ install -D -m 755 %{SOURCE2} %{buildroot}%{_sysconfdir}/materc
 %find_lang %{name}
 
 
-%postun
-%{make_session}
 
 %files -f %{name}.lang
 %doc AUTHORS COPYING ChangeLog NEWS README
