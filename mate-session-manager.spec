@@ -77,8 +77,6 @@ install -D -m 755 %{SOURCE2} %{buildroot}%{_sysconfdir}/materc
 
 %find_lang %{name}
 
-%post
-%{make_session}
 
 %postun
 %{make_session}
