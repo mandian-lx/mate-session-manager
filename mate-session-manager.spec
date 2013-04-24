@@ -1,7 +1,7 @@
 Summary:	The mate desktop programs for the MATE GUI desktop environment
 Name:		mate-session-manager
 Version:	1.4.0
-Release:	3
+Release:	4
 License:	GPLv2+
 Group:		Graphical desktop/GNOME
 URL:		http://mate-desktop.org
