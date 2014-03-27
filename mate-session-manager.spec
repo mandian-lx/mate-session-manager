@@ -1,32 +1,30 @@
+%define url_ver %(echo %{version}|cut -d. -f1,2)
+
 Summary:	The mate desktop programs for the MATE GUI desktop environment
 Name:		mate-session-manager
-Version:	1.4.0
-Release:	4
+Version:	1.8.1
+Release:	1
 License:	GPLv2+
 Group:		Graphical desktop/GNOME
-URL:		http://mate-desktop.org
-Source0:	http://pub.mate-desktop.org/releases/%{lua: print (string.match(rpm.expand("%{version}"),"%d+.%d+"))}/%{name}-%{version}.tar.xz
+Url:		http://mate-desktop.org
+Source0:	http://pub.mate-desktop.org/releases/%{url_ver}/%{name}-%{version}.tar.xz
 Source1:	startmate
 Source2:	materc
-
+Source3:	mate-lightdm.conf
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	mate-common
-BuildRequires:	mateconf-sanity-check
-BuildRequires:	mate-conf
-BuildRequires:	xmlto
+BuildRequires:	tcp_wrappers-devel
 BuildRequires:	pkgconfig(dbus-glib-1)
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(gtk+-2.0)
-BuildRequires:	pkgconfig(mateconf-2.0)
+BuildRequires:	pkgconfig(libsystemd-login)
+BuildRequires:	pkgconfig(pangox)
 BuildRequires:	pkgconfig(sm)
 BuildRequires:	pkgconfig(upower-glib)
-BuildRequires:	x11-xtrans-devel
-
+BuildRequires:	pkgconfig(xtrans)
 Requires:	desktop-common-data
-Requires:	mateconf-sanity-check
-Requires:	mate-conf
-#Requires:	mate-user-docs
+Requires:	mate-polkit
 Requires:	mate-settings-daemon
 Requires:	%{name}-bin >= %{EVRD}
 
@@ -50,15 +48,19 @@ mate-session internally.
 %prep
 %setup -q
 %apply_patches
+NOCONFIGURE=yes ./autogen.sh
 
 %build
-NOCONFIGURE=yes ./autogen.sh
-%configure2_5x
+%configure2_5x \
+	--with-systemd
 
 %make
 
 %install
 %makeinstall_std
+
+# remove unneeded converter
+rm -fr %{buildroot}%{_datadir}/MateConf
 rm -f %{buildroot}%{_datadir}/doc/mate-session/dbus/mate-session.html
 
 # wmsession session file
@@ -75,43 +77,39 @@ EOF
 install -D -m 755 %{SOURCE1} %{buildroot}%{_bindir}/startmate
 install -D -m 755 %{SOURCE2} %{buildroot}%{_sysconfdir}/materc
 
+# remove xsession file, it causes duplicate entries in GDM
+rm -rf %{buildroot}%{_datadir}/xsessions/mate.desktop
+
+# Pre-select MATE session in lightdm greeter when booting first time after install
+install -m644 %{SOURCE3} -D %{buildroot}%{_sysconfdir}/lightdm/lightdm.conf.d/50-mate.conf
+
 %find_lang %{name}
 
-
+%post
+if [ "$1" = "2" -a -r /etc/sysconfig/desktop ]; then
+	sed -i -e "s|^DESKTOP=Mate$|DESKTOP=MATE|g" /etc/sysconfig/desktop
+fi
 
 %files -f %{name}.lang
 %doc AUTHORS COPYING ChangeLog NEWS README
+%config %{_sysconfdir}/X11/wmsession.d/*
+%config(noreplace) %{_sysconfdir}/lightdm/lightdm.conf.d/50-mate.conf
 %{_bindir}/mate-session-properties
 %{_bindir}/mate-session-save
 %{_bindir}/mate-wm
 %{_datadir}/applications/*
-%{_datadir}/xsessions/mate.desktop
+%{_datadir}/mate-session-manager/gsm-inhibit-dialog.ui
+%{_datadir}/mate-session-manager/session-properties.ui
+#{_datadir}/xsessions/mate.desktop
 %{_mandir}/man1/mate-session-properties.*
 %{_mandir}/man1/mate-session-save.1.xz
 %{_mandir}/man1/mate-wm.1.xz
-%config %{_sysconfdir}/X11/wmsession.d/*
 
 %files bin
-%{_sysconfdir}/mateconf/schemas/mate-session.schemas
 %{_sysconfdir}/materc
+%{_datadir}/glib-2.0/schemas/org.mate.session.gschema.xml
 %{_bindir}/mate-session
 %{_bindir}/startmate
-%{_datadir}/mate-session
 %{_iconsdir}/hicolor/*/apps/*
 %{_mandir}/man1/mate-session.*
-
-
-
-%changelog
-* Sat Jun 09 2012 Dmitry Mikhirev <dmikhirev@mandriva.org> 1.2.0-3
-+ Revision: 804161
-- add wmsession file
-
-* Thu Jun 07 2012 Matthew Dawkins <mattydaw@mandriva.org> 1.2.0-2
-+ Revision: 803180
-- rebuild dropping non-existent mate-user-docs
-
-* Sat Jun 02 2012 Matthew Dawkins <mattydaw@mandriva.org> 1.2.0-1
-+ Revision: 802055
-- imported package mate-session-manager
 

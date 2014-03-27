@@ -1,4 +1,7 @@
 #!/bin/sh
+if [ -z "$XDG_CONFIG_HOME" ]; then
+	export XDG_CONFIG_HOME="$HOME/.config"
+fi
 
 if [ -z "$XDG_CONFIG_DIRS" ]; then
     export XDG_CONFIG_DIRS="/etc/xdg/mate:/etc/xdg"
@@ -6,8 +9,47 @@ else
     export XDG_CONFIG_DIRS="/etc/xdg/mate:$XDG_CONFIG_DIRS"
 fi
 
-if [ ! -r $HOME/.mateconf ]; then
-    mateconftool-2 --load /etc/mateconf/schemas/panel-default-setup.entries
+# Ensure the existance of the 'Desktop' folder
+if [ -e "$XDG_CONFIG_HOME/user-dirs.dirs" ]; then
+	. "$XDG_CONFIG_HOME/user-dirs.dirs"
+else
+	XDG_DESKTOP_DIR="$HOME/Desktop"
 fi
+mkdir -p "$XDG_DESKTOP_DIR"
+
+# Ensure symlinking from gtk3 bookmarks created by xdg-user-dirs-gtk-update
+if [ ! -f "$HOME/.gtk-bookmarks" ] &&  [ -f "$XDG_CONFIG_HOME/gtk-3.0/bookmarks" ];then 
+    ln -s $XDG_CONFIG_HOME/gtk-3.0/bookmarks $HOME/.gtk-bookmarks
+fi
+
+# Ensure the existance of Mageia Desktop icons at first run. desktop-common-data package
+# should already been installed.
+if [ ! -d "$XDG_CONFIG_HOME/mate" ]; then
+    xdg-desktop-icon install --novendor /usr/share/dist/desktop-files/default/register.desktop
+fi
+
+# Accels need $XDG_CONFIG_HOME/accels directory which never created by other MATE packages
+# Thus application accelerators won't be saved. Fix this issue by creating that directory
+if [ ! -d "$XDG_CONFIG_HOME/accels" ]; then
+    mkdir -p $XDG_CONFIG_HOME/accels
+fi
+
+# Temporary code: Migrate caja, atril and eom user settings to their old locations:
+# caja migration:
+if [ -e "$XDG_CONFIG_HOME/mate/caja/caja.accel" ]; then
+    mv -f $XDG_CONFIG_HOME/mate/caja.accel $XDG_CONFIG_HOME/accels/caja
+    mv -f $XDG_CONFIG_HOME/mate/caja $XDG_CONFIG_HOME/
+# eom migration
+elif [ -e "$XDG_CONFIG_HOME/mate/eom/eom.accel" ]; then
+    mv -f $XDG_CONFIG_HOME/mate/eom.accel $XDG_CONFIG_HOME/accels/eom
+    mv -f $XDG_CONFIG_HOME/mate/eom $XDG_CONFIG_HOME/
+# atril migration:
+elif [ -e "$XDG_CONFIG_HOME/mate/atril/eom.accel" ]; then
+    mv -f $XDG_CONFIG_HOME/mate/atril.accel $XDG_CONFIG_HOME/accels/atril
+    mv -f $XDG_CONFIG_HOME/mate/atril $XDG_CONFIG_HOME/
+fi
+
+#clean up old sockets if any
+[ -x /usr/bin/linc-cleanup-sockets ] && /usr/bin/linc-cleanup-sockets 2> /dev/null > /dev/null
 
 exec /usr/bin/mate-session
