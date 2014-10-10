@@ -3,7 +3,7 @@
 Summary:	The mate desktop programs for the MATE GUI desktop environment
 Name:		mate-session-manager
 Version:	1.8.1
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Graphical desktop/GNOME
 Url:		http://mate-desktop.org
@@ -51,7 +51,7 @@ mate-session internally.
 NOCONFIGURE=yes ./autogen.sh
 
 %build
-%configure2_5x \
+%configure \
 	--with-systemd
 
 %make
