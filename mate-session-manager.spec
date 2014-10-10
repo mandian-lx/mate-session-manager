@@ -18,10 +18,9 @@ BuildRequires:	tcp_wrappers-devel
 BuildRequires:	pkgconfig(dbus-glib-1)
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(gtk+-2.0)
-BuildRequires:	pkgconfig(libsystemd-login)
+BuildRequires:	pkgconfig(systemd)
 BuildRequires:	pkgconfig(pangox)
 BuildRequires:	pkgconfig(sm)
-BuildRequires:	pkgconfig(upower-glib)
 BuildRequires:	pkgconfig(xtrans)
 Requires:	desktop-common-data
 Requires:	mate-polkit
