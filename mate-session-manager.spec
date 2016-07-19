@@ -2,8 +2,8 @@
 
 Summary:	The mate desktop programs for the MATE GUI desktop environment
 Name:		mate-session-manager
-Version:	1.8.1
-Release:	3
+Version:	1.14.0
+Release:	1
 License:	GPLv2+
 Group:		Graphical desktop/GNOME
 Url:		http://mate-desktop.org
@@ -17,7 +17,7 @@ BuildRequires:	mate-common
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	pkgconfig(dbus-glib-1)
 BuildRequires:	pkgconfig(glib-2.0)
-BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:	pkgconfig(systemd)
 BuildRequires:	pkgconfig(pangox)
 BuildRequires:	pkgconfig(sm)
@@ -51,7 +51,8 @@ NOCONFIGURE=yes ./autogen.sh
 
 %build
 %configure \
-	--with-systemd
+	--with-systemd \
+	--with-gtk=3.0
 
 %make
 
@@ -95,14 +96,16 @@ fi
 %config(noreplace) %{_sysconfdir}/lightdm/lightdm.conf.d/50-mate.conf
 %{_bindir}/mate-session-properties
 %{_bindir}/mate-session-save
+%{_bindir}/mate-session-inhibit
 %{_bindir}/mate-wm
 %{_datadir}/applications/*
 %{_datadir}/mate-session-manager/gsm-inhibit-dialog.ui
 %{_datadir}/mate-session-manager/session-properties.ui
 #{_datadir}/xsessions/mate.desktop
+%{_mandir}/man1/mate-session-inhibit.1*
 %{_mandir}/man1/mate-session-properties.*
-%{_mandir}/man1/mate-session-save.1.xz
-%{_mandir}/man1/mate-wm.1.xz
+%{_mandir}/man1/mate-session-save.1*
+%{_mandir}/man1/mate-wm.1*
 
 %files bin
 %{_sysconfdir}/materc
