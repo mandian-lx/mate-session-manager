@@ -25,24 +25,6 @@ BuildRequires:	pkgconfig(pangox)
 BuildRequires:	pkgconfig(sm)
 BuildRequires:	pkgconfig(xtrans)
 
-
-#BuildRequires:	dbus-glib-devel
-#BuildRequires:	desktop-file-utils
-#BuildRequires:	xmlto
-#BuildRequires:	libXtst-devel
-
-
-# Needed for mate-settings-daemon
-#Requires: mate-control-center
-# we need an authentication agent in the session
-#Requires: mate-polkit
-# and we want good defaults
-#Requires: polkit-desktop-policy
-# for gsettings shemas
-#Requires: mate-desktop-libs
-# for /bin/dbus-launch
-#Requires: dbus-x11
-
 Requires:	desktop-common-data
 Requires:	mate-polkit
 Requires:	mate-settings-daemon
