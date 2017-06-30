@@ -23,7 +23,9 @@ BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:	pkgconfig(systemd)
 BuildRequires:	pkgconfig(pangox)
 BuildRequires:	pkgconfig(sm)
+BuildRequires:	pkgconfig(xtst)
 BuildRequires:	pkgconfig(xtrans)
+BuildRequires:	xmlto
 
 Requires:	desktop-common-data
 Requires:	mate-polkit
