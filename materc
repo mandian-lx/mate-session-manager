@@ -1,8 +1,38 @@
 #!/bin/sh
+
+# !!Set XDG Base Directory variables manually, because desktop !!
+#         !! environment doesn't set them !!
+# Per https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+# Base directory relative to which user specific configuration
+#files should be stored
 if [ -z "$XDG_CONFIG_HOME" ]; then
 	export XDG_CONFIG_HOME="$HOME/.config"
 fi
 
+# Base directory relative to which user specific data files should be stored
+if [ -z "$XDG_DATA_HOME" ]; then
+    if [ ! -d $HOME/.local/share ]; then
+        mkdir -p $HOME/.local/share
+    fi
+	export XDG_DATA_HOME="$HOME/.local/share"
+fi
+
+# Where user-specific non-essential (cached) data should be written
+if [ -z "$XDG_CACHE_HOME" ]; then
+    if [ ! -d $HOME/.local/share ]; then
+        mkdir -p $HOME/.cache
+    fi
+	export XDG_CACHE_HOME="$HOME/.cache"
+fi
+
+# Reference-ordered set of base directories to search for data files
+#in addition to the $XDG_DATA_HOME base directory
+if [ -z "$XDG_DATA_DIRS" ]; then
+    export XDG_DATA_DIRS=" /usr/local/share:/usr/share"
+fi
+
+# Reference-ordered set of base directories to search for configuration
+#files in addition to the $XDG_CONFIG_HOME base directory
 if [ -z "$XDG_CONFIG_DIRS" ]; then
     export XDG_CONFIG_DIRS="/etc/xdg/mate:/etc/xdg"
 else
@@ -15,6 +45,7 @@ if [ -e "$XDG_CONFIG_HOME/user-dirs.dirs" ]; then
 else
 	XDG_DESKTOP_DIR="$HOME/Desktop"
 fi
+
 mkdir -p "$XDG_DESKTOP_DIR"
 
 # Ensure symlinking from gtk3 bookmarks created by xdg-user-dirs-gtk-update
@@ -22,11 +53,11 @@ if [ ! -f "$HOME/.gtk-bookmarks" ] &&  [ -f "$XDG_CONFIG_HOME/gtk-3.0/bookmarks"
     ln -s $XDG_CONFIG_HOME/gtk-3.0/bookmarks $HOME/.gtk-bookmarks
 fi
 
-# Ensure the existance of Mageia Desktop icons at first run. desktop-common-data package
+# Ensure the existance of OpenMandriva Desktop icons at first run. desktop-common-data package
 # should already been installed.
-if [ ! -d "$XDG_CONFIG_HOME/mate" ]; then
-    xdg-desktop-icon install --novendor /usr/share/dist/desktop-files/default/register.desktop
-fi
+#if [ ! -d "$XDG_CONFIG_HOME/mate" ]; then
+#    xdg-desktop-icon install --novendor /usr/share/dist/desktop-files/default/register.desktop
+#fi
 
 # Accels need $XDG_CONFIG_HOME/accels directory which never created by other MATE packages
 # Thus application accelerators won't be saved. Fix this issue by creating that directory
@@ -52,4 +83,3 @@ fi
 #clean up old sockets if any
 [ -x /usr/bin/linc-cleanup-sockets ] && /usr/bin/linc-cleanup-sockets 2> /dev/null > /dev/null
 
-exec /usr/bin/mate-session
