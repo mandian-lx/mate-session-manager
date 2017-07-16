@@ -83,3 +83,5 @@ fi
 #clean up old sockets if any
 [ -x /usr/bin/linc-cleanup-sockets ] && /usr/bin/linc-cleanup-sockets 2> /dev/null > /dev/null
 
+# start MATE
+exec /usr/bin/mate-session
