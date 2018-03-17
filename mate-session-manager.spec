@@ -11,7 +11,6 @@ Source0:	https://pub.mate-desktop.org/releases/%{url_ver}/%{name}-%{version}.tar
 Source1:	startmate
 Source2:	materc
 Source3:	mate-lightdm.conf
-Patch0:		https://patch-diff.githubusercontent.com/raw/mate-desktop/mate-session-manager/pull/138.patch
 
 BuildRequires:	intltool
 BuildRequires:	mate-common
